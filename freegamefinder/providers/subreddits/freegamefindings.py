@@ -10,9 +10,9 @@ class FreeGameFindings(Subreddit):
         self.re_platform = re.compile(r"(?<=\[).+(?=])")
         self.re_category = re.compile(r"(?<=\()[^(]+(?=\))")
 
-    def get_freebies(self, limit=100):
+    def get_freebies(self):
         filtered_posts = []
-        posts = self.get_posts(sort_by="new", limit=limit)
+        posts = self.get_posts(sort_by="new")
         for post in posts:
             try:
                 category = self.re_category.search(post.title).group(0).lower()

@@ -13,12 +13,23 @@ REDDIT = praw.Reddit(
 
 
 class Subreddit(ABC):
-    def __init__(self, subreddit, provider_name=None, always_free=False, expired_flair=None):
+    """Abstract base class for subreddit providers"""
+    def __init__(self,
+                 subreddit: str,
+                 limit: int = 100,           # Max number of posts to retrieve (reddit API rate limit is 1000)
+                 provider_name: str = None,
+                 always_free: bool = False,
+                 expired_flair: str = None):
         self.controller = REDDIT.subreddit(subreddit)
-        self.provider_name = f"/r/{subreddit}"
         self.always_free = always_free
+        if limit > 1000:
+            self.limit = 1000
+        else:
+            self.limit = limit
+        if provider_name is None:
+            self.provider_name = f"/r/{subreddit}"
         if expired_flair is None:
-            self.expired_flair = expired_flair
+            self.expired_flair = None
         else:
             self.expired_flair = expired_flair.lower()
         # Compiled regex patterns for basic parsing. Only re_title is strictly required
@@ -26,20 +37,28 @@ class Subreddit(ABC):
         self.re_free = None
         self.re_platform = None
 
-    def get_posts(self, sort_by="new", limit=100):
+    def get_posts(self, sort_by="new"):
+        """ Gets posts from the subreddit passed in on instantiation
+        :param sort_by: Method to use for retrieving posts: 'new', 'top', or 'hot'
+        :return: Praw ListingGenerator object containing reddit posts
+        """
         if sort_by == "new":
-            return self.controller.new(limit=limit)
+            return self.controller.new(limit=self.limit)
         elif sort_by == "top":
-            return self.controller.top(limit=limit)
+            return self.controller.top(limit=self.limit)
         elif sort_by == "hot":
-            return self.controller.hot(limit=limit)
+            return self.controller.hot(limit=self.limit)
         return None
 
-    def get_freebies(self, posts=None, limit=100):
+    def get_freebies(self, posts=None):
+        """ Calls get_posts() and returns only the valid free results
+        :param posts: (Optional) If a collection of posts is provided it will be used instead of calling get_posts()
+        :return: List of Freebie objects constructed from reddit posts
+        """
         freebies = []
         # Retrieve posts if they weren't passed in directly
         if posts is None:
-            posts = self.get_posts(sort_by="new", limit=limit)
+            posts = self.get_posts(sort_by="new")
         # Make sure a post is free, non-expired, and has a game title before returning it
         for post in posts:
             if self.post_is_free(post) and not self.post_is_expired(post):
@@ -57,6 +76,7 @@ class Subreddit(ABC):
         return freebies
 
     def post_is_expired(self, post):
+        """ Returns True of post has known "expired" flair """
         if self.expired_flair:
             try:
                 return self.expired_flair == post.link_flair_text.lower()
@@ -65,11 +85,9 @@ class Subreddit(ABC):
         return False
 
     def post_is_free(self, post):
+        """ Returns True if post appears to reference a free game """
         if self.always_free:
             return True
         elif self.re_free:
             return self.re_free.search(post.title.lower())
         return False
-
-    def search(self, keywords):
-        return self.controller.search(keywords)
