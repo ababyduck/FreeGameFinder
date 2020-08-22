@@ -1,5 +1,5 @@
-from .providers.subreddits import gamedeals as rgd
-from .providers.subreddits import freegamefindings as rfgf
+from freegamefinder.providers.subreddits import gamedeals as rgd
+from freegamefinder.providers.subreddits import freegamefindings as rfgf
 
 # todo check database of deals
 # todo check known sources for new deals (cron?)
