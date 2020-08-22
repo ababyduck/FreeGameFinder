@@ -1,4 +1,4 @@
-from providers.subreddits import gamedeals
+from providers.subreddits import gamedeals, freegamefindings
 
 # todo check database of deals
 # todo check known sources for new deals (cron?)
@@ -11,6 +11,10 @@ from providers.subreddits import gamedeals
 def test_reddit():
     r_gamedeals = gamedeals.GameDeals()
     for freebie in r_gamedeals.get_freebies():
+        print(freebie, "\n")
+
+    r_freegamefindings = freegamefindings.FreeGameFindings()
+    for freebie in r_freegamefindings.get_freebies():
         print(freebie, "\n")
 
 

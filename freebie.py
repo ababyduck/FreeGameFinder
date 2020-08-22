@@ -18,8 +18,10 @@ class Freebie:
             self.discovered = discovered
 
     def __str__(self):
-        basic_info = f"{self.title}\n{self.url}\nSource: {self.provider}, " \
-                     f"{self.discovered.astimezone().strftime(TIME_FORMAT)}"
+        basic_info = f"{self.title}\n" \
+                     f"{self.url}\n" \
+                     f"Source: {self.provider}\n" \
+                     f"Discovered: {self.discovered.astimezone().strftime(TIME_FORMAT)}"
         if self.expires:
             return f"{basic_info}\nExpires: {self.expires}"
         return basic_info
