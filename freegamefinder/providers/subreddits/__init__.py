@@ -3,6 +3,7 @@ import praw
 from freegamefinder.freebie import Freebie
 from freegamefinder.credentials import reddit_api as secrets
 
+RATE_LIMIT = 1000
 REDDIT = praw.Reddit(
     client_id=secrets['client_id'],
     client_secret=secrets['client_secret'],
@@ -22,8 +23,8 @@ class Subreddit(ABC):
                  expired_flair: str = None):
         self.controller = REDDIT.subreddit(subreddit)
         self.always_free = always_free
-        if limit > 1000:
-            self.limit = 1000
+        if limit > RATE_LIMIT:
+            self.limit = RATE_LIMIT
         else:
             self.limit = limit
         if provider_name is None:

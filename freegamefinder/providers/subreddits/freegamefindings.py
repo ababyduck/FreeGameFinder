@@ -4,8 +4,8 @@ from freegamefinder.providers.subreddits import Subreddit
 
 class FreeGameFindings(Subreddit):
     # https://www.reddit.com/r/FreeGameFindings/
-    def __init__(self):
-        super().__init__(subreddit="FreeGameFindings", always_free=True, expired_flair="expired")
+    def __init__(self, limit: int = 100):
+        super().__init__(subreddit="FreeGameFindings", limit=limit, always_free=True, expired_flair="expired")
         self.re_title = re.compile(r"(?<=\) )[^(]+")
         self.re_platform = re.compile(r"(?<=\[).+(?=])")
         self.re_category = re.compile(r"(?<=\()[^(]+(?=\))")
