@@ -1,19 +1,20 @@
-from providers.subreddits import gamedeals, freegamefindings
+from .providers.subreddits import gamedeals as rgd
+from .providers.subreddits import freegamefindings as rfgf
 
 # todo check database of deals
 # todo check known sources for new deals (cron?)
 # todo report new deals on discord
 # todo implement web interface
 # web interface should include scoring, removing false positives, blocking sources (i.e. subreddits user)
-# todo implement /r/gamedeals, /r/freegamefindings, epic, prime, humble, gog giveaway, uplay, etc
+# todo implement epic, prime, humble, gog giveaway, uplay, etc
 
 
 def test_reddit():
-    r_gamedeals = gamedeals.GameDeals()
+    r_gamedeals = rgd.GameDeals()
     for freebie in r_gamedeals.get_freebies():
         print(freebie, "\n")
 
-    r_freegamefindings = freegamefindings.FreeGameFindings()
+    r_freegamefindings = rfgf.FreeGameFindings()
     for freebie in r_freegamefindings.get_freebies():
         print(freebie, "\n")
 

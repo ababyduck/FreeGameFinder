@@ -1,5 +1,5 @@
 import re
-from providers.subreddits import Subreddit
+from freegamefinder.providers.subreddits import Subreddit
 
 
 class FreeGameFindings(Subreddit):

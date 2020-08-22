@@ -1,7 +1,7 @@
 from abc import ABC
 import praw
-from freebie import Freebie
-from credentials import reddit_api as secrets
+from freegamefinder.freebie import Freebie
+from freegamefinder.credentials import reddit_api as secrets
 
 REDDIT = praw.Reddit(
     client_id=secrets['client_id'],
